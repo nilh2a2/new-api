@@ -16,7 +16,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 For commercial licensing, please contact support@quantumnous.com
 */
-import { ExternalLink, Gift, Loader2, Receipt } from 'lucide-react'
+import { ExternalLink, Gift, Loader2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
@@ -35,7 +35,6 @@ interface RechargeFormCardProps {
   redeeming: boolean
   topupLink?: string
   loading?: boolean
-  onOpenBilling?: () => void
 }
 
 export function RechargeFormCard({
@@ -46,7 +45,6 @@ export function RechargeFormCard({
   redeeming,
   topupLink,
   loading,
-  onOpenBilling,
 }: RechargeFormCardProps) {
   const { t } = useTranslation()
   const redemptionEnabled = topupInfo?.enable_redemption !== false
@@ -71,46 +69,21 @@ export function RechargeFormCard({
 
   return (
     <TitledCard
-      title={t('Have a Code?')}
-      description={t('Enter your redemption code')}
+      title={t('Redemption Code')}
+      description={t('Enter a redemption code to add credits to your balance.')}
       icon={<Gift className='h-4 w-4' />}
-      action={
-        onOpenBilling ? (
-          <Button
-            variant='outline'
-            size='sm'
-            onClick={onOpenBilling}
-            className='w-full gap-2 sm:w-auto'
-          >
-            <Receipt className='h-4 w-4' />
-            {t('Order History')}
-          </Button>
-        ) : null
-      }
       contentClassName='space-y-4 sm:space-y-5'
     >
       {redemptionEnabled ? (
         <>
-          {topupLink && (
-            <Button
-              className='h-11 w-full justify-between gap-3 rounded-lg px-4 sm:w-auto sm:min-w-56'
-              render={
-                <a href={topupLink} target='_blank' rel='noopener noreferrer' />
-              }
-            >
-              <span>{t('Buy redemption code')}</span>
-              <ExternalLink className='h-4 w-4' />
-            </Button>
-          )}
-
-          <div className='space-y-2.5 sm:space-y-3'>
+          <div className='max-w-2xl space-y-2.5 sm:space-y-3'>
             <div className='flex items-center gap-2'>
               <Gift className='text-muted-foreground h-4 w-4' />
               <Label
                 htmlFor='redemption-code'
                 className='text-muted-foreground text-xs font-medium tracking-wider uppercase'
               >
-                {t('Have a Code?')}
+                {t('Redemption Code')}
               </Label>
             </div>
             <div className='grid grid-cols-[minmax(0,1fr)_auto] gap-2'>
@@ -124,14 +97,35 @@ export function RechargeFormCard({
               <Button
                 onClick={onRedeem}
                 disabled={redeeming}
-                variant='outline'
-                className='h-10 px-4'
+                className='h-10 px-5'
               >
                 {redeeming && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
                 {t('Redeem')}
               </Button>
             </div>
           </div>
+
+          {topupLink && (
+            <div className='bg-muted/30 flex max-w-2xl flex-col gap-3 rounded-xl border p-3 sm:flex-row sm:items-center sm:justify-between'>
+              <p className='text-muted-foreground min-w-0 text-sm leading-relaxed'>
+                {t('Use the purchase page to get a code, then redeem it here.')}
+              </p>
+              <Button
+                variant='secondary'
+                className='h-9 w-full justify-between gap-2 rounded-lg border border-[color-mix(in_oklch,var(--success)_30%,var(--border))] bg-[color-mix(in_oklch,var(--success)_12%,var(--card))] px-3 text-foreground hover:bg-[color-mix(in_oklch,var(--success)_18%,var(--card))] sm:w-auto sm:min-w-44'
+                render={
+                  <a
+                    href={topupLink}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  />
+                }
+              >
+                <span>{t('Buy redemption code')}</span>
+                <ExternalLink className='h-4 w-4' />
+              </Button>
+            </div>
+          )}
         </>
       ) : (
         <Alert>

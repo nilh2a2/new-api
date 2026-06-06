@@ -20,7 +20,6 @@ import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getSelf } from '@/lib/api'
 import { SectionPageLayout } from '@/components/layout'
-import { BillingHistoryDialog } from './components/dialogs/billing-history-dialog'
 import { RechargeFormCard } from './components/recharge-form-card'
 import { SubscriptionPlansCard } from './components/subscription-plans-card'
 import { WalletStatsCard } from './components/wallet-stats-card'
@@ -35,7 +34,6 @@ export function Wallet(props: WalletProps) {
   const { t } = useTranslation()
   const [user, setUser] = useState<UserWalletData | null>(null)
   const [userLoading, setUserLoading] = useState(true)
-  const [billingDialogOpen, setBillingDialogOpen] = useState(false)
   const [redemptionCode, setRedemptionCode] = useState('')
   const [showSubscriptionPanel, setShowSubscriptionPanel] = useState(true)
 
@@ -63,7 +61,6 @@ export function Wallet(props: WalletProps) {
 
   useEffect(() => {
     if (props.initialShowHistory) {
-      setBillingDialogOpen(true)
       window.history.replaceState({}, '', window.location.pathname)
     }
   }, [props.initialShowHistory])
@@ -109,7 +106,6 @@ export function Wallet(props: WalletProps) {
                   redeeming={redeeming}
                   topupLink={topupInfo?.topup_link}
                   loading={topupLoading}
-                  onOpenBilling={() => setBillingDialogOpen(true)}
                 />
               </div>
 
@@ -124,10 +120,6 @@ export function Wallet(props: WalletProps) {
         </SectionPageLayout.Content>
       </SectionPageLayout>
 
-      <BillingHistoryDialog
-        open={billingDialogOpen}
-        onOpenChange={setBillingDialogOpen}
-      />
     </>
   )
 }
